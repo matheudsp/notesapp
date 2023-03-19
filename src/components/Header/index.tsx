@@ -23,7 +23,7 @@ export default function Header({name}: HeaderProps){
     return(
         <View style={styles.headerContainer}>
             <TouchableOpacity >
-                <Ionicons name="md-menu-sharp" onPress={()=>navigation.toggleDrawer()} size={25} color="black" />
+                <Ionicons name="md-menu-sharp" onPress={()=>navigation.navigate('Book')} size={25} color="black" />
             </TouchableOpacity>
             <Text style={{fontWeight:'bold', fontSize:20}}>{name}</Text>
             <TouchableOpacity>

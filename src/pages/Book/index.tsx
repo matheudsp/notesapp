@@ -1,4 +1,4 @@
-import React,{useState, useContext} from 'react';
+import React,{useState, useContext, useEffect} from 'react';
 import {
   View,
   Text,
@@ -17,12 +17,9 @@ import { api } from '../../services/api'
 import { AuthContext } from '../../contexts/AuthContext';
 import Header from '../../components/Header';
 import BookItem from '../../components/BookItem';
+import { DrawerNavigationProp } from '@react-navigation/drawer';
+import { MaterialIcons } from '@expo/vector-icons'; 
 
-type RouteDetailParams = {
-  Book:{
-    author_id: string
-  }
-}
 
 type BookProps = {
   id:string;
@@ -34,29 +31,38 @@ type BookProps = {
 
 // type BookRouterProps = RouteProp<RouteDetailParams, 'Book'>;
 
-export default function Book() {
-  const { user, loadInfo} = useContext(AuthContext)
+export default function Books() {
+  const navigation = useNavigation<DrawerNavigationProp<StackPramsList>>();
+  const { user} = useContext(AuthContext)
 
   // const route = useRoute<BookRouterProps>();
   // const navigation = useNavigation<NativeStackNavigationProp<StackPramsList>>();
 
   const [books,setBooks] = useState<BookProps[] | []>([])
+  
+  
 
+  useEffect(() => {
+    async function loadBook(){
+      const response = await api.post('/books', {authorId: user.id})
+    
+      setBooks(response.data)
+    }
 
-  async function loadBook() {
-    await loadInfo()
-    setBooks(response.data)
-  } 
+    loadBook();
+  },[])
 
-
+  
+  
 
   return (
     <SafeAreaView style={styles.container}>
       <Header name={'Books'}/>
       <ScrollView style={styles.scrollView}>
       <View style={styles.titleContainer}>
-        <Text style={styles.title}>All books</Text>
-        <Ionicons style={styles.reload} onPress={loadBook} name="reload" size={24} color="black" />
+        <MaterialIcons name="arrow-right" size={25} color="black" />
+        <Text style={styles.title}>{user.name} <Text style={{fontWeight:'300'}}>book's</Text></Text>
+        
         
       </View>
       <View style={styles.itemContainer}>
@@ -66,9 +72,10 @@ export default function Book() {
           </Text>
         )}
 
-        {books.map((book, index) => <BookItem key={index} name={book.name} description={book.description}/> )}
+        {books.map((book, index) => <BookItem key={index} bookId={book.id} name={book.name} description={book.description}/> )}
         
       </View>
+      
       </ScrollView>
     </SafeAreaView>
   )
@@ -89,21 +96,21 @@ const styles = StyleSheet.create({
     paddingHorizontal:10,
   },
   titleContainer:{
-    width: '90%',
-    flexDirection: 'row',
-    alignContent:'center',
-    alignItems: 'baseline',
+    flex:1,
+    flexDirection:'row',
+    alignItems:'center',
+    width:'90%',
+    paddingLeft:20,
     marginVertical: 10,
-    paddingLeft:5
-  },
-  reload:{
-    marginLeft:10
+    paddingVertical:5
+    
   },
   title: {
-    
-    fontSize: 30,
+    textAlign:'center',
+    fontSize: 18,
     fontWeight: 'bold',
     color: '#191919',
+    textTransform:'uppercase'
   },
   itemContainer: {
     paddingHorizontal:5,

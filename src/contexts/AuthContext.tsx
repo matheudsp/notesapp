@@ -9,7 +9,6 @@ type AuthContextData = {
     isAuth: boolean;
     signIn:(credentials: SignInProps) => Promise<void>;
     signUp: (credentials: SignUpProps) => Promise<void>;
-    loadInfo:() => Promise<BookProps>
     loadingAuth: boolean;
     loading: boolean;
     signOut: () => Promise<void>;
@@ -21,14 +20,6 @@ type UserProps = {
     email: string;
     token: string;
 
-}
-
-type BookProps = {
-    id:string;
-    name: string;
-    description:string;
-    updatedAt:string;
-    authorId:string;
 }
 
 type AuthProviderProps = {
@@ -124,23 +115,6 @@ export function AuthProvider({children}: AuthProviderProps){
             setLoadingAuth(false);
         }
     }
-
-    async function loadInfo() {
-        setLoading(true);
-        
-        try{
-            const response = await api.post('/books', {authorId: user.id})
-
-            setLoading(false);
-            return (response.data);
-            
-
-        }catch(err){
-            console.log('erro ao acessar',err)
-            setLoading(false);
-        }
-        
-      } 
     
 
     async function signUp({name, email, password}: SignUpProps){
@@ -184,8 +158,7 @@ export function AuthProvider({children}: AuthProviderProps){
                 signUp,
                 loading,
                 loadingAuth,
-                signOut,
-                loadInfo
+                signOut
                 }
             }
         >

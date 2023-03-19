@@ -5,24 +5,25 @@ import { useNavigation } from '@react-navigation/native'
 import { StackPramsList } from '../../routes/app.routes'
 import { DrawerNavigationProp } from '@react-navigation/drawer';
 
-type BookProps = {
-    name:string
-    description:string
-    bookId:string
-}
 
-export default function BookItem({name, description, bookId}: BookProps){
+type PostProps = {
+  id:string;
+  name: string;
+
+  postId:string;
+}
+export default function PostItem({name, id}: PostProps){
   const navigation = useNavigation<DrawerNavigationProp<StackPramsList>>();
 
   function openBook(){
-    navigation.navigate('Post', { bookId: bookId , bookName: name})
+    // navigation.navigate('Post')
+    console.log('abrir nota')
   }
 
     return(
         <TouchableOpacity style={styles.item} onPress={openBook}>
             <Text style={[styles.itemText, { fontSize: 18, fontWeight: 'bold' }]}>{name}</Text>
-            <Text style={[styles.itemText, { fontSize: 14, fontWeight:'300'}]}>{description}</Text>
-            <Text style={[styles.itemText, { fontSize: 12, fontWeight: '300', alignSelf: "flex-end" }]}>updatedAt</Text>
+            
         </TouchableOpacity>
     )
 }

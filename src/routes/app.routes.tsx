@@ -2,17 +2,19 @@ import React from 'react';
 
 import Book from '../pages/Book';
 import Post from '../pages/Post';
+import Note from '../pages/Note';
 
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 
-
 export type StackPramsList = {
     Book: undefined
+    Note:undefined  
     Post: {
       bookId:string
       bookName: string
     }
+    
 };
 
 
@@ -28,8 +30,6 @@ function AppRoutes(){
           component={Book} 
           options={{
             headerShown:false,
-            
-          
           }}
         />
         <Stack.Screen 
@@ -37,12 +37,16 @@ function AppRoutes(){
           component={Post} 
           options={{
             headerShown:false,
-            
           }}
         />
-        
+        <Stack.Screen 
+          name="Note" 
+          component={Note} 
+          options={{
+            headerShown:false,          
+          }}
+        />
   
-
       </Stack.Navigator>
     )
   }

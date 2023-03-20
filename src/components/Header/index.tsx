@@ -22,11 +22,12 @@ export default function Header({name}: HeaderProps){
 
     return(
         <View style={styles.headerContainer}>
-            <TouchableOpacity >
+            <TouchableOpacity style={styles.headerItem}>
                 <Ionicons name="md-menu-sharp" onPress={()=>navigation.navigate('Book')} size={25} color="black" />
             </TouchableOpacity>
-            <Text style={{fontWeight:'bold', fontSize:20}}>{name}</Text>
-            <TouchableOpacity>
+            <Text style={{fontWeight:'bold', fontSize:20,color:'black',textAlign:'center',
+        textAlignVertical:'center',}}>{name}</Text>
+            <TouchableOpacity style={styles.headerItem}>
                 <MaterialIcons name="exit-to-app" size={25} color="black" onPress={signOut}/>
             </TouchableOpacity>
         </View>
@@ -37,13 +38,23 @@ const styles = StyleSheet.create({
     headerContainer:{
         flexDirection:'row',
         width:'100%',  
-        alignItems: 'center',
+        marginTop:7,
         justifyContent:'space-between',
-        height:'9%',
-        paddingTop:'3%',
+        height:'7%',
+        backgroundColor:'#FFF',
+        
         borderBottomWidth:0.6,
         borderColor:'#9ba1ac',
-        paddingStart:'5%',
-        paddingEnd:'5%'
+        
+    },
+    headerItem:{
+        
+        
+        alignItems:'center',
+        justifyContent:'center',
+        width:'20%',
+        height:'100%',
+        
+        
     }
 })

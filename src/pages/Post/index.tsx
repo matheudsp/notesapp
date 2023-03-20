@@ -15,11 +15,12 @@ import { api } from '../../services/api'
 import { useRoute, RouteProp, useNavigation } from '@react-navigation/native'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { StackPramsList }  from '../../routes/app.routes'
- 
+import LayoutNotes from '../../components/LayoutNotes';
 
 type PostProps = {
   id:string;
   name: string;
+  text:string;
   bookId:string;
 }
 
@@ -42,13 +43,13 @@ export default function Post() {
 
   useEffect(() => {
     async function loadPost(){
-      console.log(route.params.bookId)
+      
       const response = await api.post('/posts',{bookId: route.params.bookId})
 
-      console.log(response.data)
       setPosts(response.data)
+      
     }
-    
+      
     loadPost()
     
   },[])
@@ -56,22 +57,23 @@ export default function Post() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Header name={'Notes'} />
+      <Header name={'Your Notes'} />
       <ScrollView style={styles.scrollView}>
         <View style={styles.titleContainer}>
           <MaterialIcons name="arrow-right" size={25} color="black" />
           <Text style={styles.title}>Notes of <Text style={styles.bookName}>{route.params.bookName}</Text></Text>
 
         </View>
-        <View style={styles.itemContainer}>
+        <View>
           {posts.length === 0 && (
             <Text style={styles.emptyList}>
               Nenhuma nota criada até o momento...
             </Text>
           )}
-
-          {posts.map((post, index) => <PostItem key={index} id={post.id} postId={post.id} name={post.name}  />)}
-
+          <LayoutNotes >
+            {posts.map((post, index) => <PostItem key={index} id={post.id} postId={post.id} name={post.name} text={post.text}/>)}
+          </LayoutNotes>
+          
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -88,7 +90,7 @@ const styles = StyleSheet.create({
   },
   scrollView:{
     width: '100%',
-    paddingHorizontal:10,
+    
   },
   titleContainer:{
     flex:1,
@@ -112,26 +114,10 @@ const styles = StyleSheet.create({
     color: 'black',
     textDecorationLine:'underline'
   },
-  itemContainer: {
-    paddingHorizontal:5,
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent:'center'
-  },
+  
   emptyList:{
-
-  },
-  item: {
     width:'100%',
-    height: 90,
-    backgroundColor: "#80558C",
-    justifyContent: 'center',
-    alignItems: 'flex-start',
-    paddingHorizontal: 15,
-    borderRadius:8,
-    marginBottom:"1%"
+    textAlign:'center'
   },
-  itemText: {
-    color: '#fff',
-  }
+  
 })

@@ -25,7 +25,7 @@ type BookProps = {
   id:string;
   name: string;
   description:string;
-  updatedAt:string;
+  updatedAt: string;
   authorId:string;
 }
 
@@ -57,7 +57,7 @@ export default function Books() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Header name={'Books'}/>
+      <Header name={'Your Books'}/>
       <ScrollView style={styles.scrollView}>
       <View style={styles.titleContainer}>
         <MaterialIcons name="arrow-right" size={25} color="black" />
@@ -72,7 +72,7 @@ export default function Books() {
           </Text>
         )}
 
-        {books.map((book, index) => <BookItem key={index} bookId={book.id} name={book.name} description={book.description}/> )}
+        {books.map((book, index) => <BookItem key={index} bookId={book.id} name={book.name} description={book.description} updatedAt={book.updatedAt}/> )}
         
       </View>
       
@@ -120,18 +120,5 @@ const styles = StyleSheet.create({
   },
   emptyList:{
 
-  },
-  item: {
-    width:'100%',
-    height: 90,
-    backgroundColor: "#80558C",
-    justifyContent: 'center',
-    alignItems: 'flex-start',
-    paddingHorizontal: 15,
-    borderRadius:8,
-    marginBottom:"1%"
-  },
-  itemText: {
-    color: '#fff',
   }
 })

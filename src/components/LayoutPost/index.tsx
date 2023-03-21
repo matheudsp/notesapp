@@ -2,9 +2,9 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import type { PropsWithChildren } from 'react';
 
-export default function LayoutNotes({ children }: PropsWithChildren) {
+export default function LayoutPost({ children }: PropsWithChildren) {
 
-    const rowGap = 1
+    const rowGap = 6
     const columnGap = 6
     return (
         <View style={[styles.container, { rowGap, columnGap }]}>

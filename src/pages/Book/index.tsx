@@ -9,7 +9,7 @@ import {
 } from 'react-native'
 import { Ionicons } from "@expo/vector-icons"
 
-import { useRoute,RouteProp, useNavigation } from '@react-navigation/native'
+import { useRoute,RouteProp, useNavigation, useFocusEffect } from '@react-navigation/native'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { StackPramsList } from '../../routes/app.routes'
 
@@ -17,8 +17,9 @@ import { api } from '../../services/api'
 import { AuthContext } from '../../contexts/AuthContext';
 import Header from '../../components/Header';
 import BookItem from '../../components/BookItem';
-import { DrawerNavigationProp } from '@react-navigation/drawer';
+
 import { MaterialIcons } from '@expo/vector-icons'; 
+import CreateButton from '../../components/CreateButton';
 
 
 type BookProps = {
@@ -32,7 +33,7 @@ type BookProps = {
 // type BookRouterProps = RouteProp<RouteDetailParams, 'Book'>;
 
 export default function Books() {
-  const navigation = useNavigation<DrawerNavigationProp<StackPramsList>>();
+  const navigation = useNavigation<NativeStackNavigationProp<StackPramsList>>();
   const { user} = useContext(AuthContext)
 
   // const route = useRoute<BookRouterProps>();
@@ -41,19 +42,17 @@ export default function Books() {
   const [books,setBooks] = useState<BookProps[] | []>([])
   
   
-
-  useEffect(() => {
-    async function loadBook(){
-      const response = await api.post('/books', {authorId: user.id})
-    
-      setBooks(response.data)
-    }
-
-    loadBook();
-  },[])
-
-  
-  
+  useFocusEffect(
+    React.useCallback(() => {
+      async function loadBook(){
+        const response = await api.post('/book', {authorId: user.id})
+      
+        setBooks(response.data)
+      }
+      loadBook();
+      
+    }, [])
+  );
 
   return (
     <SafeAreaView style={styles.container}>
@@ -77,6 +76,7 @@ export default function Books() {
       </View>
       
       </ScrollView>
+      <CreateButton color={"#315ae1"}/>
     </SafeAreaView>
   )
 }

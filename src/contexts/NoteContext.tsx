@@ -6,16 +6,27 @@ type NoteContextData = {
     handleEdit: VoidFunction;
     updateNote: (credentials: NoteProps) => Promise<void>;
     loading:boolean
+    loadPost: (credentials:PostProps) => Promise<void>
+    posts: PostProps[] | []
 }
 
-type NoteProps ={
+export type NoteProps ={
     title:string,
-    text:string
+    text:string,
+    postId:string
 }
 
 type NoteProviderProps = {
     children: ReactNode;
 }
+export type PostProps = {
+    map(arg0: (post: { id: string; title: string; text: string; }, index: React.Key | null | undefined) => JSX.Element): React.ReactNode;
+    length: number;
+    id:string;
+    title: string;
+    text:string;
+    bookId:string;
+  }
 
 
 export const NoteContext = createContext( {} as NoteContextData);
@@ -24,20 +35,31 @@ export function NoteProvider({children}: NoteProviderProps){
     
     const [isEditable, setIsEditable] = useState(false);
     const [loading, setLoading] = useState(false)
+    const [posts,setPosts] = useState<PostProps[] | []>([])
 
     function handleEdit(){
         setIsEditable(!isEditable)
     }
 
-    async function updateNote({title, text}:NoteProps){
+    async function loadPost({bookId}:PostProps ){
+        
+        const response = await api.post('/post',{bookId: bookId})
+        setPosts(response.data)
+        
+
+      }
+
+    async function updateNote({postId,title, text}:NoteProps){
         setLoading(true)
         setIsEditable(false)
+        
         try{
-            const response = await api.update('/post',{
+            const response = await api.put('/post/update',{
+                postId,
                 title,
                 text
             })
-            console.log(response.data);
+            
             setLoading(false)
 
         }catch(err){
@@ -54,7 +76,9 @@ export function NoteProvider({children}: NoteProviderProps){
                 isEditable,
                 handleEdit,
                 updateNote,
-                loading
+                loading,
+                loadPost,
+                posts
                 }
             }
         >

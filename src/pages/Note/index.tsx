@@ -5,68 +5,91 @@ import {
   TextInput,
   StyleSheet,
   SafeAreaView,
-  ScrollView
+  ScrollView,
+  StyleProp,
+  ViewStyle
 } from 'react-native'
 import Bottom from '../../components/Bottom';
 import HeaderNote from '../../components/HeaderNote';
-
-
+import { api } from '../../services/api';
+import { useRoute, RouteProp, useNavigation } from '@react-navigation/native'
 
 import { NoteContext } from '../../contexts/NoteContext';
 
+
+type RouteDetailParams = {
+  Note:{
+    postId: string;
+  }
+}
+
+type PostRouteProps = RouteProp<RouteDetailParams, 'Note'>;
+
+
 export default function Note() {
+  const route = useRoute<PostRouteProps>();
 
   const {isEditable, handleEdit} = useContext(NoteContext)
+  const [disabledStyle, setDisabledStyle] = useState<StyleProp<ViewStyle>>();
 
-  const [title, setTitle] = useState('')
-  const [text, setText] = useState('')
+  const [title, setTitle] = useState<string>('')
+  const [text,setText] = useState<string>('')
+
 
   useEffect(() => {
     async function loadNote(){
-      const response = await api.post('/post', {}) //postId
+      const response = await api.post('/post/post', {postId: route.params.postId}) 
       
-      setTitle('')
-      setText('')
+     
+      const [{title,text}] = response.data
       
+      setTitle(title)
+      setText(text)
     }
 
     loadNote();
+    
   },[])
 
-
-  async function handleSaveNote(){
-    if(title === ''){
-      return
+  useEffect(() => {
+    if (!isEditable) {
+      setDisabledStyle({opacity:0.5});
+    } else {
+      setDisabledStyle({opacity: 1});
     }
+  }, [isEditable]);
 
-    // await updateNote({title, text})
-  }
+
+
+ 
   
   return (
 
     <SafeAreaView style={styles.container}>
-      <HeaderNote name={'Note'}/>
+      <HeaderNote title={title} text={text} postId={route.params.postId}/>
       <ScrollView style={styles.scrollView}>
 
       <View style={styles.inputContainer}>
+          
             <TextInput 
-              placeholder='Title | Example: Run 🏃‍♀️'
-              style={[styles.inputTitle, styles.input]}
+              placeholder='title | Example: Run 🏃‍♀️'
+              style={[styles.inputName, styles.input, disabledStyle]}
               value={title}
               onChangeText={setTitle}
               maxLength={30}
-              editable={!isEditable}
+              editable={isEditable}
             />
             <ScrollView style={styles.scrollView}>
             <TextInput 
               placeholder='Details | Example: I ran 5 km today, and I keep improving, I did it in 35min 😎'
-              style={[styles.inputText, styles.input]}
+              style={[styles.inputText, styles.input,disabledStyle]}
               value={text}
               onChangeText={setText}
               multiline={true}
               allowFontScaling              
-              editable={!isEditable}
+              editable={isEditable}
               autoFocus={true}
+              
               
             />
             </ScrollView>
@@ -102,20 +125,20 @@ const styles = StyleSheet.create({
   },
   input:{
     padding:15,
-    
+    color:'#191919'
   },
 
-  inputTitle:{
+  inputName:{
     fontSize:20,
-    fontWeight:'700'
+    fontWeight:'700',
+    
   },
   inputText:{
     height:"100%",
     fontSize:18,
     fontWeight:'400',
     
-    
-    
-    
+ 
   }
+  
 })

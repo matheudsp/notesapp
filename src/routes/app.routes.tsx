@@ -9,10 +9,12 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 export type StackPramsList = {
     Book: undefined
-    Note:undefined  
     Post: {
       bookId:string
       bookName: string
+    }
+    Note:{
+      postId: string
     }
     
 };

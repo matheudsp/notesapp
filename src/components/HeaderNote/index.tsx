@@ -1,20 +1,18 @@
 import React, { useState, useContext } from 'react'
-import { View, StyleSheet, TouchableOpacity, Text } from 'react-native'
+import { View, StyleSheet, TouchableOpacity, Text, ActivityIndicator } from 'react-native'
 import { FontAwesome, MaterialIcons, SimpleLineIcons } from '@expo/vector-icons';
 
 import { useRoute, RouteProp, useNavigation } from '@react-navigation/native'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { StackPramsList } from '../../routes/app.routes'
 
-type HeaderNoteProps = {
-    name: string
-}
+import { NoteProps } from '../../contexts/NoteContext';
 
 import { NoteContext } from '../../contexts/NoteContext';
 
-export default function HeaderNote({ name }: HeaderNoteProps) {
+export default function HeaderNote({  title, text, postId}: NoteProps) {
     const navigation = useNavigation<NativeStackNavigationProp<StackPramsList>>();
-    const { isEditable,handleEdit} = useContext(NoteContext);
+    const { isEditable,handleEdit, updateNote, loading} = useContext(NoteContext);
 
     const [isLiked, setIsLiked] = useState(false)
     const [iconLike, setIconLike] = useState('favorite-border')
@@ -29,11 +27,22 @@ export default function HeaderNote({ name }: HeaderNoteProps) {
         }
     }
 
+    async function saveNote(){ 
+        
+        if(title === ''){
+            return
+        }
+
+        
+        await updateNote({postId,title,text})
+        
+    }
+    
     function handleBack(){
         navigation.goBack()
         
         if(!isEditable){
-            handleEdit()
+            handleEdit
         }
     }
 
@@ -47,29 +56,33 @@ export default function HeaderNote({ name }: HeaderNoteProps) {
                 <Text style={{
                     fontWeight: '600', fontSize: 20, color: 'black', textAlign: 'center',
                     textAlignVertical: 'center',
-                }}>{name}
+                }}>Note
                 </Text>
             </View>
             <View style={[styles.headerItem, { justifyContent: 'flex-end', paddingEnd: 10 }]}>
-                {isEditable && (
+                {!isEditable && (
                     <TouchableOpacity style={styles.headerContent}>
                         <FontAwesome name='edit' size={24} color="black" onPress={handleEdit}/>
                     </TouchableOpacity>
-                )}
+                ) }
 
-                {isEditable && (
+                {!isEditable && (
                     <TouchableOpacity style={styles.headerContent}>
                         <MaterialIcons name={iconLike} onPress={handleLike} size={24} color="black" />
                     </TouchableOpacity>
                 )}
 
-                {!isEditable && (
-                    <TouchableOpacity style={styles.headerContent} onPress={handleEdit}>
-                        <Text style={{
-                            fontWeight: '700', fontSize: 18, color: 'black', textAlign: 'center',
-                            textAlignVertical: 'center',
-                        }}>Save
-                        </Text>
+                {isEditable && (
+                    <TouchableOpacity style={styles.headerContent} onPress={saveNote}>
+                        {loading ? (
+                                <ActivityIndicator size={25} color="#191919" />       
+                            ) : (<Text style={{
+                                fontWeight: '700', fontSize: 18, color: 'black', textAlign: 'center',
+                                textAlignVertical: 'center',
+                            }}>Save
+                                
+                            </Text>)}
+                        
                     </TouchableOpacity>
                 )}
                 <TouchableOpacity style={styles.headerContent}>
@@ -101,6 +114,7 @@ const styles = StyleSheet.create({
         height: '100%',
     },
     headerContent: {
+        
         paddingHorizontal: 15
     }
 })

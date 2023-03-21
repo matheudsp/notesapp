@@ -12,19 +12,15 @@ import { AuthContext } from '../../contexts/AuthContext';
 import { MaterialIcons } from "@expo/vector-icons"
 import { api } from '../../services/api'
 
-import { useRoute, RouteProp, useNavigation } from '@react-navigation/native'
+import { useRoute, RouteProp, useNavigation, useFocusEffect } from '@react-navigation/native'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { StackPramsList }  from '../../routes/app.routes'
-import LayoutNotes from '../../components/LayoutNotes';
+import LayoutPost from '../../components/LayoutPost';
+import CreateButton from '../../components/CreateButton';
+import { NoteContext } from '../../contexts/NoteContext';
 
-type PostProps = {
-  id:string;
-  name: string;
-  text:string;
-  bookId:string;
-}
 
-type RouteDetailParams = {
+export type RouteDetailParams = {
   Post:{
     bookId: string
     bookName: string
@@ -36,46 +32,41 @@ type RouteDetailParams = {
 type PostRouteProps = RouteProp<RouteDetailParams, 'Post'>;
 
 export default function Post() {
+  
   const route = useRoute<PostRouteProps>();
-  const navigation = useNavigation<NativeStackNavigationProp<StackPramsList>>();
+  const {loadPost, posts} = useContext(NoteContext);
+  const {bookId, bookName} = route.params
+  
+  useFocusEffect(
+    React.useCallback(() => {
+      loadPost(bookId)
 
-  const [posts,setPosts] = useState<PostProps[] | []>([])
-
-  useEffect(() => {
-    async function loadPost(){
       
-      const response = await api.post('/posts',{bookId: route.params.bookId})
-
-      setPosts(response.data)
-      
-    }
-      
-    loadPost()
-    
-  },[])
-
-
+    }, [])
+  );
+ 
   return (
     <SafeAreaView style={styles.container}>
       <Header name={'Your Notes'} />
       <ScrollView style={styles.scrollView}>
         <View style={styles.titleContainer}>
           <MaterialIcons name="arrow-right" size={25} color="black" />
-          <Text style={styles.title}>Notes of <Text style={styles.bookName}>{route.params.bookName}</Text></Text>
+          <Text style={styles.title}>Notes of <Text style={styles.bookName}>{bookName}</Text></Text>
 
         </View>
         <View>
           {posts.length === 0 && (
             <Text style={styles.emptyList}>
-              Nenhuma nota criada até o momento...
+              Nenhuma nota criada até o momento... 
             </Text>
           )}
-          <LayoutNotes >
-            {posts.map((post, index) => <PostItem key={index} id={post.id} postId={post.id} name={post.name} text={post.text}/>)}
-          </LayoutNotes>
+          <LayoutPost >
+            {posts.map((post, index) => <PostItem key={index} id={post.id} postId={post.id} name={post.title} text={post.text}/>)}
+          </LayoutPost>
           
         </View>
       </ScrollView>
+      <CreateButton color={"#315ae1"}/>
     </SafeAreaView>
   )
 }

@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
       item: {
         width:'100%',
         height: 100,
-        backgroundColor: "#80558C",
+        backgroundColor: "#315ae1",
         justifyContent: 'center',
         alignItems: 'flex-start',
         paddingHorizontal: 15,

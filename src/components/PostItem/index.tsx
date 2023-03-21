@@ -12,15 +12,15 @@ type PostProps = {
   text:string;
   postId:string;
 }
-export default function PostItem({name,text}: PostProps){
+export default function PostItem({name,text,postId}: PostProps){
   const navigation = useNavigation<DrawerNavigationProp<StackPramsList>>();
 
-  function openBook(){
-    navigation.navigate('Note')
+  function openNote(){
+    navigation.navigate('Note', {postId: postId})
   }
 
     return(
-        <TouchableOpacity style={styles.item} onPress={openBook}>
+        <TouchableOpacity style={styles.item} onPress={openNote}>
             <Text style={[styles.itemText, { fontSize: 18, fontWeight: 'bold' }]}>{name}</Text>
             <Text style={[styles.itemText, { fontSize: 14, fontWeight:'300'}]}>{text}</Text>
             
@@ -43,13 +43,13 @@ const styles = StyleSheet.create({
       },
       item: {
         width:180,
-        height: 70,
-        backgroundColor: "#80558C",
+        height: 90,
+        backgroundColor: "#315ae1",
         justifyContent: 'center',
         alignItems: 'flex-start',
         paddingHorizontal: 15,
         borderRadius:8,
-        marginBottom:"1%"
+        
       },
       itemText: {
         color: '#fff',

@@ -43,6 +43,7 @@ export default function SignIn() {
   return (
     <View style={styles.container}>
       <AntDesign name="login" size={80} color="#315ae1" />
+      <Text style={{fontWeight:'bold',color:"#315ae1" ,fontSize:30}}>NotesApp</Text>
       <Text style={{fontWeight:'bold', fontSize:30, marginTop:30}}>Entrar</Text>
       <View style={styles.inputContainer}>
         <Text style={styles.label}>E-mail</Text>

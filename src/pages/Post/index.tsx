@@ -32,13 +32,14 @@ export type RouteDetailParams = {
 type PostRouteProps = RouteProp<RouteDetailParams, 'Post'>;
 
 export default function Post() {
-  
   const route = useRoute<PostRouteProps>();
-  const {loadPost, posts} = useContext(NoteContext);
   const {bookId, bookName} = route.params
+  const {loadPost, posts} = useContext(NoteContext);
+  
   
   useFocusEffect(
     React.useCallback(() => {
+      
       loadPost(bookId)
 
       
@@ -61,12 +62,12 @@ export default function Post() {
             </Text>
           )}
           <LayoutPost >
-            {posts.map((post, index) => <PostItem key={index} id={post.id} postId={post.id} name={post.title} text={post.text}/>)}
+          {posts.map((post, index) => <PostItem key={index} id={post.id} postId={post.id} name={post.title} text={post.text}/>)}
           </LayoutPost>
           
         </View>
       </ScrollView>
-      <CreateButton color={"#315ae1"}/>
+      <CreateButton isBook={false} color={"#03179c"}/>
     </SafeAreaView>
   )
 }

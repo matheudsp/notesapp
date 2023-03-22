@@ -6,6 +6,7 @@ import Routes from './src/routes'
 import { AuthProvider } from './src/contexts/AuthContext'
 import { NoteProvider } from './src/contexts/NoteContext';
 
+
 export default function App() {
   
   return (
@@ -14,7 +15,8 @@ export default function App() {
         <NoteProvider>
           <StatusBar backgroundColor="#f7f7f7" barStyle="dark-content" translucent={true} />
           
-          <Routes/>
+            <Routes/>
+          
           </NoteProvider>
       </AuthProvider>
     </NavigationContainer>
